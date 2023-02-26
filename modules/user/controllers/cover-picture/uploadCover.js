@@ -4,19 +4,19 @@ import catchAsyncError from "../../../../helpers/catchAsyncError.js";
 import ErrorHandler from "../../../../helpers/errorHandler.js";
 import models from "../../../../models/index.js";
 
-/// UPLOAD Avatar ///
+/// UPLOAD cover ///
 
-const uploadAvatar = catchAsyncError(async (req, res, next) => {
-  const avatar = req.file;
+const uploadCover = catchAsyncError(async (req, res, next) => {
+  const cover = req.file;
 
-  if (!avatar) {
-    return next(new ErrorHandler("please provide an avatar image", 400));
+  if (!cover) {
+    return next(new ErrorHandler("please provide an cover image", 400));
   }
 
-  const fileSize = avatar.size / 1024;
+  const fileSize = cover.size / 1024;
 
-  if (fileSize > 2048) {
-    return next(new ErrorHandler("image size must be lower than 2mb", 413));
+  if (fileSize > 5120) {
+    return next(new ErrorHandler("image size must be lower than 5mb", 413));
   }
 
   const user = await models.User.findById(req.user._id);
@@ -25,20 +25,20 @@ const uploadAvatar = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("user not found", 404));
   }
 
-  const fileTempPath = avatar.path;
+  const fileTempPath = cover.path;
 
   if (fileTempPath) {
-    if (user.avatar && user.avatar.public_id) {
-      const imageId = user.avatar.public_id;
+    if (user.cover && user.cover.public_id) {
+      const imageId = user.cover.public_id;
       await cloudinary.v2.uploader.destroy(imageId);
     }
 
     await cloudinary.v2.uploader
       .upload(fileTempPath, {
-        folder: "social_media_api/user/avatars",
+        folder: "social_media_api/user/covers",
       })
       .then(async (result) => {
-        user.avatar = {
+        user.cover = {
           public_id: result.public_id,
           url: result.secure_url,
         };
@@ -51,16 +51,14 @@ const uploadAvatar = catchAsyncError(async (req, res, next) => {
 
         res.status(200).json({
           success: true,
-          message: "profile picture uploaded successfully",
-          profilePicture: user.avatar
+          message: "cover picture uploaded successfully",
+          coverPicture:user.cover 
         });
       })
       .catch((err) => {
         fs.unlink(fileTempPath, (fileErr) => {
           if (fileErr) console.log(fileErr);
         });
-
-        console.log(err);
 
         res.status(400).json({
           success: false,
@@ -75,4 +73,4 @@ const uploadAvatar = catchAsyncError(async (req, res, next) => {
   }
 });
 
-export default uploadAvatar;
+export default uploadCover;

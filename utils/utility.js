@@ -412,7 +412,7 @@ utility.getUserData = async (userId, reqUser) => {
   return userData;
 };
 
-export default utility;
+
 
 // GET HASHTAG
 utility.getHashTags = (text) => {
@@ -435,6 +435,33 @@ utility.getMentions = (text) => {
 
   return [];
 };
+
+utility.checkIfPostLiked = async (postId, user) => {
+  const isLiked = await models.PostLike.findOne({
+    post: postId,
+    user: user._id,
+  });
+
+  if (isLiked) {
+    return true;
+  }
+
+  return false;
+};
+
+utility.checkIfPostReacted = async (postId, user) => {
+  const isReacted = await models.PostReaction.findOne({
+    post: postId,
+    user: user._id,
+  });
+
+  if (isReacted) {
+    return true;
+  }
+
+  return false;
+};
+
 
 // POST LIKE DATA
 utility.getPostLikeData = async (postLikeId, reqUser) => {
@@ -791,3 +818,5 @@ utility.getStats = async (startDate, endDate) => {
     comments,
   };
 };
+
+export default utility;

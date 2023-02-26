@@ -82,11 +82,11 @@ export const runApp = () => {
   // ROUTING
   app.use('/api/v1/auth', authRouter);
   app.use('/api/v1/user', userRouter);
-  app.use('/api/v1/dashboard', adminRouter);
   app.use('/api/v1/post', postRouter);
+  app.use('/api/v1/dashboard', adminRouter);
   app.use('/api/v1/notification', notificationRouter);
   app.use('/api/v1/location-info', locationInfoRouter);
-  app.use('/api/v1/location-info', tagRouter);
+  app.use('/api/v1/tags', tagRouter);
   app.use('/api/v1/chat', chatRouter);
   app.use('/api/v1/update', updateRouter);
 

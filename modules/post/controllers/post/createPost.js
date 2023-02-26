@@ -9,14 +9,16 @@ import utility from "../../../../utils/utility.js";
 const createPost = catchAsyncError(async (req, res, next) => {
   let { caption, mediaFiles, visibility } = req.body;
 
-  if (!mediaFiles) {
+  if (!req.body) {
     return next(new ErrorHandler(ResponseMessages.MEDIA_FILES_REQUIRED, 400));
   }
 
   if (mediaFiles && mediaFiles.length > 0) {
     for (let i = 0; i < mediaFiles.length; i++) {
       if (!mediaFiles[i].mediaType) {
-        return next(new ErrorHandler(ResponseMessages.MEDIA_TYPE_REQUIRED, 400));
+        return next(
+          new ErrorHandler(ResponseMessages.MEDIA_TYPE_REQUIRED, 400)
+        );
       }
 
       if (!mediaFiles[i].public_id) {
@@ -27,31 +29,40 @@ const createPost = catchAsyncError(async (req, res, next) => {
         return next(new ErrorHandler(ResponseMessages.URL_REQUIRED, 400));
       }
 
-      if (mediaFiles[i].mediaType === "video") {
+      if (mediaFiles[i].mediaType === 'video') {
         if (!mediaFiles[i].thumbnail) {
-          return next(new ErrorHandler(ResponseMessages.VIDEO_THUMBNAIL_REQUIRED, 400));
+          return next(
+            new ErrorHandler(ResponseMessages.VIDEO_THUMBNAIL_REQUIRED, 400)
+          );
         }
 
         if (!mediaFiles[i].thumbnail.public_id) {
-          return next(new ErrorHandler(ResponseMessages.VIDEO_THUMBNAIL_PUBLIC_ID_REQUIRED, 400));
+          return next(
+            new ErrorHandler(
+              ResponseMessages.VIDEO_THUMBNAIL_PUBLIC_ID_REQUIRED,
+              400
+            )
+          );
         }
 
         if (!mediaFiles[i].thumbnail.url) {
-          return next(new ErrorHandler(ResponseMessages.VIDEO_THUMBNAIL_URL_REQUIRED, 400));
+          return next(
+            new ErrorHandler(ResponseMessages.VIDEO_THUMBNAIL_URL_REQUIRED, 400)
+          );
         }
       }
     }
   }
 
   const post = await models.Post.create({
-    postType: "media",
+    postType: 'media',
     owner: req.user._id,
     caption: caption,
     mediaFiles: mediaFiles,
     visibility: visibility,
   });
 
-  if (mediaFiles.length > 1) {
+  if (mediaFiles && mediaFiles.length > 1) {
     for (let i = 0; i < mediaFiles.length; i++) {
       if (mediaFiles[i].mediaType === "image") {
         await models.PostMedia.create({
@@ -76,7 +87,9 @@ const createPost = catchAsyncError(async (req, res, next) => {
     }
   }
 
-  const user = await models.User.findById(req.user._id).select("_id postsCount");
+  const user = await models.User.findById(req.user._id).select(
+    '_id postsCount'
+  );
   user.postsCount++;
   await user.save();
 
@@ -89,25 +102,29 @@ const createPost = catchAsyncError(async (req, res, next) => {
 
     if (mentions.length > 0) {
       for (let i = 0; i < mentions.length; i++) {
-        const mentionedUser = await models.User.findOne({ username: mentions[i] })
-          .select(["_id", "username"]);
+        const mentionedUser = await models.User.findOne({
+          username: mentions[i],
+        }).select(['_id', 'username']);
 
         const notification = await models.Notification.findOne({
           to: mentionedUser._id,
           from: req.user._id,
           refId: post._id,
-          type: "postMention"
+          type: 'postMention',
         });
 
-        const isPostOwner = await utility.checkIfPostOwner(post._id, mentionedUser);
+        const isPostOwner = await utility.checkIfPostOwner(
+          post._id,
+          mentionedUser
+        );
 
-        if (mentionedUser && (!notification && !isPostOwner)) {
+        if (mentionedUser && !notification && !isPostOwner) {
           await models.Notification.create({
             to: mentionedUser._id,
             from: req.user._id,
             refId: post._id,
             body: `mentioned you in a post`,
-            type: "postMention"
+            type: 'postMention',
           });
         }
       }
@@ -126,7 +143,6 @@ const createPost = catchAsyncError(async (req, res, next) => {
         });
       }
     }
-
   }
 
   const postData = await utility.getPostData(post._id, req.user);

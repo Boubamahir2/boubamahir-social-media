@@ -18,6 +18,7 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.7.0",
     "firebase-admin": "^11.5.0",
+    "googleapis": "^111.0.0",
     "gridfs-stream": "^1.1.1",
     "helmet": "^6.0.1",
     "http-status-codes": "^2.2.0",
@@ -39,7 +40,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js",
+    "dev": "nodemon index.js  --ignore client",
     "start": "node index.js"
   },
   "author": "Bouba",

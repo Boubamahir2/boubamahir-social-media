@@ -43,6 +43,11 @@ import reportUser from './report/reportUser.js';
 import requestVerification from './bluetick-requests/requestVerification.js';
 import logoutOtherDevices from './login-info/logoutOtherDevices.js';
 
+//  cover picture
+import uploadCover from './cover-picture/uploadCover.js';
+import selectCover from './cover-picture/selectCover.js';
+import removeCoverPicture from './cover-picture/removeCover.js';
+
 const userController = {};
 userController.getProfileDetails = getProfileDetails;
 userController.changePassword = changePassword;
@@ -51,6 +56,11 @@ userController.uploadAvatar = uploadAvatar;
 userController.deleteAvatar = deleteAvatar;
 userController.uploadProfilePicture = uploadProfilePicture;
 userController.removeProfilePicture = removeProfilePicture;
+
+userController.uploadCover = uploadCover;
+userController.selectCover = selectCover;
+userController.removeCoverPicture = removeCoverPicture;
+
 userController.followUnfollowUser = followUnfollowUser;
 userController.getUserDetails = getUserDetails;
 userController.getFollowers = getFollowers;
@@ -92,6 +102,8 @@ userController.logoutOtherDevices = logoutOtherDevices;
 
 userController.reportUser = reportUser;
 userController.requestVerification = requestVerification;
+
+
 
 
 export default userController;

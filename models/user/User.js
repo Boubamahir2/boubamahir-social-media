@@ -8,20 +8,25 @@ const UserSchema = new mongoose.Schema(
     firstName: {
       type: String,
       minlength: [3, 'First name must be at least 3 characters.'],
-      maxlength: [20, 'First name must not be more than 20 characters.'],
+      maxlength: [25, 'First name must not be more than 25 characters.'],
       required: [true, 'Please enter a first name.'],
+      trim: true,
+      text: true,
     },
     lastName: {
       type: String,
       minlength: [3, 'last name must be at least 3 characters.'],
-      maxlength: [20, 'last name must not be more than 20 characters.'],
-      required: [true, 'Please enter a last name.'],
+      maxlength: [25, 'last name must not be more than 25 characters.'],
+      required: [true, 'Please enter your last name.'],
+      trim: true,
+      text: true,
     },
     email: {
       type: String,
-      required: true,
-      max: 50,
+      required: [true, 'email is required'],
+      trim: true,
       unique: true,
+      max: 40,
     },
 
     emailVerified: {
@@ -33,7 +38,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please enter an username.'],
       minlength: [3, 'Username must be at least 3 characters.'],
-      maxlength: [20, 'Username must not exceeds 20 characters.'],
+      maxlength: [25, 'Username must not exceeds 25 characters.'],
+      trim: true,
+      text: true,
+      unique: true,
     },
 
     nameChangedAt: Date,
@@ -53,7 +61,7 @@ const UserSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, 'Please enter a password.'],
-      minlength: [6, 'password must be at least 6 characters.'],
+      minlength: [8, 'password must be at least 8 characters.'],
       select: false,
     },
 
@@ -62,14 +70,29 @@ const UserSchema = new mongoose.Schema(
       default: '',
     },
 
+    gender: {
+      type: String,
+      trim: true,
+    },
+
+    birthDate: {
+      type: Number,
+      trim: true,
+    },
+
     passwordChangedAt: Date,
 
     avatar: {
       public_id: String,
       url: String,
+  
+    },
+    cover: {
+      public_id: String,
+      url: String,
     },
 
-    gender: String,
+    posts: Array,
 
     dob: String,
 
@@ -185,10 +208,67 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    location: String,
-    occupation: String,
     viewedProfile: Number,
     impressions: Number,
+    requests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    search: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+        },
+        createdAt: {
+          type: Date,
+        },
+      },
+    ],
+    userInfos: {
+      bio: {
+        type: String,
+      },
+      otherName: {
+        type: String,
+      },
+      job: {
+        type: String,
+      },
+      workplace: {
+        type: String,
+      },
+      highSchool: {
+        type: String,
+      },
+      college: {
+        type: String,
+      },
+      currentCity: {
+        type: String,
+      },
+      hometown: {
+        type: String,
+      },
+      relationship: {
+        type: String,
+        enum: ['Single', 'In a relationship', 'Married', 'Divorced'],
+      },
+    },
+    savedPosts: [
+      {
+        post: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Post',
+        },
+        savedAt: {
+          type: Date,
+          required: true,
+        },
+      },
+    ],
   },
 
   { timestamps: true }

@@ -6,22 +6,20 @@ const commentSchema = new mongoose.Schema({
     required: true,
   },
 
-  type: {
+  commentType: {
     type: String,
-    enum: [
-      "text", "media", "poll"
-    ],
-    default: "text",
+    enum: ['text', 'media', 'poll'],
+    default: 'text',
   },
 
   user: {
     type: mongoose.Schema.ObjectId,
-    ref: "User",
+    ref: 'User',
   },
 
   post: {
     type: mongoose.Schema.ObjectId,
-    ref: "Post",
+    ref: 'Post',
   },
 
   likesCount: {
@@ -37,20 +35,26 @@ const commentSchema = new mongoose.Schema({
   commentStatus: {
     type: String,
     enum: [
-      "active", "deleted", "reported", "archived",
-      "unarhived", "withheld", "blocked", "flagged",
-      "banned", "muted", "verified", "unverified",
+      'active',
+      'deleted',
+      'reported',
+      'archived',
+      'unarhived',
+      'withheld',
+      'blocked',
+      'flagged',
+      'banned',
+      'muted',
+      'verified',
+      'unverified',
     ],
-    default: "active",
+    default: 'active',
   },
 
   visibility: {
     type: String,
-    enum: [
-      "public", "private", "followers",
-      "mutual", "close_friends",
-    ],
-    default: "public",
+    enum: ['public', 'private', 'followers', 'mutual', 'close_friends'],
+    default: 'public',
   },
 
   allowLikes: {

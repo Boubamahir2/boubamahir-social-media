@@ -23,12 +23,14 @@ import AuthToken from './user/authToken.js';
 import PollVote from './post/PollVote.js';
 import PollOption from './post/PollOption.js';
 import PostMedia from './media/PostMedia.js';
+import PostReaction from './post/React.js'
 
 const models = {};
 
 models.Comment = Comment;
 models.CommentLike = CommentLike;
 models.CommentReply = CommentReply;
+models.PostReaction = PostReaction;
 
 models.PostMedia = PostMedia;
 

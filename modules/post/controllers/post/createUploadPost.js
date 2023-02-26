@@ -28,9 +28,9 @@ const createUploadPost = catchAsyncError(async (req, res, next) => {
                 );
             }
         } else {
-            if (fileSize > 2048) {
+            if (fileSize > 5120) {
                 return next(
-                    new ErrorHandler("image file size must be lower than 2mb", 413)
+                    new ErrorHandler("image file size must be lower than 5mb", 413)
                 );
             }
         }
@@ -102,27 +102,30 @@ const createUploadPost = catchAsyncError(async (req, res, next) => {
               });
         }
     }
+   
+      const newPost = {
+          owner: req.user._id,
+          mediaFiles: mediaFilesLinks,
+          caption: req.body.caption,
+          visibility: req.body.visibility,
+      };
 
-    const newPost = {
-        owner: req.user._id,
-        mediaFiles: mediaFilesLinks,
-        caption: req.body.caption,
-        visibility: req.body.visibility,
-    };
+      const post = await models.Post.create(newPost);
 
-    const post = await models.Post.create(newPost);
+      const user = await models.User.findById(req.user._id);
 
-    const user = await models.User.findById(req.user._id);
+      user.posts.push(post._id);
+      user.postsCount++;
 
-    user.posts.push(post._id);
-    user.postsCount++;
-
-    await user.save();
-
+      await user.save();
+      console.log(req.user._id, 'owner');
+      console.log(user);
+      console.log(mediaFilesLinks,'media  ');
+     
     res.status(201).json({
         success: true,
         message: "post created successfully",
-        post,
+        
     });
 });
 

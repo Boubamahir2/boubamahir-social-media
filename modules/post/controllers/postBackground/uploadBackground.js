@@ -4,46 +4,46 @@ import catchAsyncError from "../../../../helpers/catchAsyncError.js";
 import ErrorHandler from "../../../../helpers/errorHandler.js";
 import models from "../../../../models/index.js";
 
-/// UPLOAD Avatar ///
+/// UPLOAD background ///
 
-const uploadAvatar = catchAsyncError(async (req, res, next) => {
-  const avatar = req.file;
+const uploadBackground = catchAsyncError(async (req, res, next) => {
+  const background = req.file;
 
-  if (!avatar) {
-    return next(new ErrorHandler("please provide an avatar image", 400));
+  if (!background) {
+    return next(new ErrorHandler("please provide an background image", 400));
   }
 
-  const fileSize = avatar.size / 1024;
+  const fileSize = background.size / 1024;
 
-  if (fileSize > 2048) {
-    return next(new ErrorHandler("image size must be lower than 2mb", 413));
+  if (fileSize > 5120) {
+    return next(new ErrorHandler("image size must be lower than 5mb", 413));
   }
 
-  const user = await models.User.findById(req.user._id);
+  const post = await models.Post.findById(req.query.id);
 
-  if (!user) {
-    return next(new ErrorHandler("user not found", 404));
+  if (!post) {
+    return next(new ErrorHandler("post not found", 404));
   }
 
-  const fileTempPath = avatar.path;
+  const fileTempPath = background.path;
 
   if (fileTempPath) {
-    if (user.avatar && user.avatar.public_id) {
-      const imageId = user.avatar.public_id;
+    if (post.background && post.background.public_id) {
+      const imageId = post.background.public_id;
       await cloudinary.v2.uploader.destroy(imageId);
     }
 
     await cloudinary.v2.uploader
       .upload(fileTempPath, {
-        folder: "social_media_api/user/avatars",
+        folder: "social_media_api/background",
       })
       .then(async (result) => {
-        user.avatar = {
+        post.background = {
           public_id: result.public_id,
           url: result.secure_url,
         };
 
-        await user.save();
+        await post.save();
 
         fs.unlink(fileTempPath, (err) => {
           if (err) console.log(err);
@@ -52,7 +52,6 @@ const uploadAvatar = catchAsyncError(async (req, res, next) => {
         res.status(200).json({
           success: true,
           message: "profile picture uploaded successfully",
-          profilePicture: user.avatar
         });
       })
       .catch((err) => {
@@ -75,4 +74,4 @@ const uploadAvatar = catchAsyncError(async (req, res, next) => {
   }
 });
 
-export default uploadAvatar;
+export default uploadBackground;

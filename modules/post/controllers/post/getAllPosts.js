@@ -1,23 +1,15 @@
-import catchAsyncError from "../../../../helpers/catchAsyncError.js";
-import models from "../../../../models/index.js";
-import utility from "../../../../utils/utility.js";
+import catchAsyncError from '../../../../helpers/catchAsyncError.js';
+import models from '../../../../models/index.js';
+import utility from '../../../../utils/utility.js';
 
-/// GET All POSTS A SINGLE USER ///
+/// GET All POSTS  ///
 
-const getSingleUserPosts = catchAsyncError(async (req, res, next) => {
+const getAllPosts = catchAsyncError(async (req, res, next) => {
   let currentPage = parseInt(req.query.page) || 1;
   let limit = parseInt(req.query.limit) || 20;
 
-  const followings = await models.Follower.find({ follower: req.user._id })
-    .select("_id user");
-
-  const followingIds = followings.map((u) => u.user);
-
-  followingIds.push(req.user._id);
-
   const totalPosts = await models.Post.find({
-    owner: { $in: followingIds },
-    postStatus: "active",
+    postStatus: 'active',
   }).countDocuments();
 
   let totalPages = Math.ceil(totalPosts / limit);
@@ -34,7 +26,7 @@ const getSingleUserPosts = catchAsyncError(async (req, res, next) => {
     currentPage = totalPages;
   }
 
-   let skip = currentPage > 0 ? (currentPage - 1) * limit : 0;
+  let skip = currentPage > 0 ? (currentPage - 1) * limit : 0;
 
   let prevPageIndex = null;
   let hasPrevPage = false;
@@ -53,8 +45,9 @@ const getSingleUserPosts = catchAsyncError(async (req, res, next) => {
     hasPrevPage = true;
   }
 
-  const baseUrl = `${req.protocol}://${req.get("host")}${req.originalUrl
-    }`.split("?")[0];
+  const baseUrl = `${req.protocol}://${req.get('host')}${
+    req.originalUrl
+  }`.split('?')[0];
 
   if (hasPrevPage) {
     prevPage = `${baseUrl}?page=${prevPageIndex}&limit=${limit}`;
@@ -65,10 +58,9 @@ const getSingleUserPosts = catchAsyncError(async (req, res, next) => {
   }
 
   const slicedPosts = await models.Post.find({
-    owner: { $in: followingIds },
-    postStatus: "active",
+    postStatus: 'active',
   })
-    .select("_id")
+    .select('_id')
     .skip(skip)
     .limit(limit)
     .sort({ createdAt: -1 });
@@ -96,4 +88,4 @@ const getSingleUserPosts = catchAsyncError(async (req, res, next) => {
   });
 });
 
-export default getSingleUserPosts;
+export default getAllPosts;

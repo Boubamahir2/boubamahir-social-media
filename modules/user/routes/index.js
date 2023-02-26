@@ -37,12 +37,29 @@ userRouter
   .delete(isAuthenticatedUser, userController.deleteAvatar);
 
 userRouter
-  .route("/upload-profile-picture")
+  .route("/select-profile-picture")
   .post(isAuthenticatedUser, userController.uploadProfilePicture);
 
 userRouter
   .route("/remove-profile-picture")
   .delete(isAuthenticatedUser, userController.removeProfilePicture);
+  
+
+  // cover
+userRouter
+  .route("/delete-cover")
+  .delete(isAuthenticatedUser, userController.removeCoverPicture);
+
+userRouter
+  .route("/select-cover")
+  .post(isAuthenticatedUser, userController.selectCover);
+userRouter
+  .route('/upload-cover')
+  .post(
+    multerMiddleware.single('cover'),
+    isAuthenticatedUser,
+    userController.uploadCover
+  );
 
 userRouter
   .route("/deactivate-account")

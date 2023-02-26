@@ -30,8 +30,12 @@ postRouter
   );
 
 postRouter
+  .route('/get-user-posts')
+  .get(isAuthenticatedUser, postController.getSingleUserPosts);
+postRouter
+
   .route('/get-posts')
-  .get(isAuthenticatedUser, postController.getPosts);
+  .get(isAuthenticatedUser, postController.getAllPosts);
 
 postRouter
   .route('/get-trending-posts')
@@ -41,15 +45,25 @@ postRouter
   .route('/like-post')
   .get(isAuthenticatedUser, postController.likeUnlikePost);
 
+  // raect to a post
+postRouter
+  .route('/react-to-post')
+  .patch(isAuthenticatedUser, postController.reactUnreactPost)
+  .get(isAuthenticatedUser, postController.getReacts);
+  
+  postRouter
+  .route('/react-to-post/:id')
+  .get(isAuthenticatedUser, postController.getAllPostReactions);
+
 postRouter
   .route('/get-post-liked-users')
   .get(isAuthenticatedUser, postController.getLikedUsers);
 
 postRouter
-  .route('/post')
+  .route('/get-or-remove-post')
   .get(isAuthenticatedUser, postController.getPostDetails)
-  .delete(isAuthenticatedUser, postController.deletePost);
-// .put(isAuthenticatedUser, updatePost)
+  .delete(isAuthenticatedUser, postController.deletePost)
+  .patch(isAuthenticatedUser, postController.updatePost);
 
 postRouter
   .route('/search-posts')

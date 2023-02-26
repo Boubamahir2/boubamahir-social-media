@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const postSchema = new mongoose.Schema({
   postType: {
@@ -12,6 +12,16 @@ const postSchema = new mongoose.Schema({
   },
   content: {
     type: String,
+  },
+
+  backgroundPath: {
+    type: String,
+    default: '',
+  },
+
+  background: {
+    public_id: String,
+    url: String,
   },
 
   owner: {
@@ -67,12 +77,34 @@ const postSchema = new mongoose.Schema({
     default: 0,
   },
 
-  commentsCount: {
-    type: Number,
-    default: 0,
+  reactions: {
+    like: {
+      type: Number,
+      default: 0,
+    },
+    love: {
+      type: Number,
+      default: 0,
+    },
+    haha: {
+      type: Number,
+      default: 0,
+    },
+    sad: {
+      type: Number,
+      default: 0,
+    },
+    angry: {
+      type: Number,
+      default: 0,
+    },
+    wow: {
+      type: Number,
+      default: 0,
+    },
   },
 
-  repostsCount: {
+  totalReactions: {
     type: Number,
     default: 0,
   },
@@ -151,14 +183,34 @@ const postSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
+    },
+  ],
 });
 
-postSchema.pre("save", function (next) {
+postSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });
 
-postSchema.index({ caption: "text", pollQuestion: "text" });
-const Post = mongoose.model("Post", postSchema);
+// update reaction
+postSchema.methods.updateReaction = function (reaction, isAdd) {
+   const likeCount = Number(this.reactions.like) || 0;
+   const totalCount = Number(this.totalReactions) || 0;
+   if (isAdd) {
+     this.reactions[reaction] = likeCount + 1;
+     this.totalReactions = totalCount + 1;
+   } else {
+     this.reactions[reaction] = likeCount - 1;
+     this.totalReactions = totalCount - 1;
+   }
+};
+
+postSchema.index({ caption: 'text', pollQuestion: 'text' });
+
+const Post = mongoose.model('Post', postSchema);
 
 export default Post;
