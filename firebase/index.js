@@ -7,7 +7,7 @@ if (process.env.NODE_ENV !== "production") {
     });
 }
 
-const privateKey = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "");
+const privateKey = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '');
 
 const serviceAccount = {
     type: process.env.FIREBASE_TYPE,

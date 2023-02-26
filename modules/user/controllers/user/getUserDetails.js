@@ -36,6 +36,7 @@ const getUserDetails = catchAsyncError(async (req, res, next) => {
       followersCount: 1,
       followingCount: 1,
       avatar: 1,
+      cover:1,
       about: 1,
       dob: 1,
       gender: 1,
@@ -68,6 +69,7 @@ const getUserDetails = catchAsyncError(async (req, res, next) => {
   userDetails.postsCount = user.postsCount;
   userDetails.followingStatus = followingStatus;
   userDetails.avatar = user.avatar;
+  userDetails.cover = user.cover;
   userDetails.about = user.about;
   userDetails.dob = user.dob;
   userDetails.gender = user.gender;
