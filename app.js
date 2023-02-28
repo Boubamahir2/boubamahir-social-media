@@ -59,12 +59,17 @@ export const runApp = () => {
       max: 60,
     })
   );
-
+app.use(
+  fileUpload({
+    useTempFiles: true,
+  })
+);
   // all the configuration are comming from the package docs
   /* CONFIGURATIONS */
   // const __filename = fileURLToPath(import.meta.url);
   // const __dirname = path.dirname(__filename);
   // app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
+
   const __dirname = path.resolve();
   app.use(express.static(path.join(__dirname, 'public')));
 

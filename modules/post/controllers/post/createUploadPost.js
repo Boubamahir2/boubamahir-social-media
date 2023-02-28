@@ -44,38 +44,38 @@ const createUploadPost = catchAsyncError(async (req, res, next) => {
 
         if (videoFilesTypes.includes(fileExt)) {
             await cloudinary.v2.uploader
-                .upload(fileTempPath, {
-                    folder: "backend/public/assets/posts/videos",
-                    resource_type: "video",
-                    chunk_size: 6000000,
-                })
-                .then(async (result) => {
-                    mediaFilesLinks.push({
-                        public_id: result.public_id,
-                        url: result.secure_url,
-                        mediaType: "video",
-                    });
-
-                    fs.unlink(fileTempPath, (err) => {
-                        if (err) console.log(err);
-                    });
-                })
-                .catch((err) => {
-                    fs.unlink(fileTempPath, (fileErr) => {
-                        if (fileErr) console.log(fileErr);
-                    });
-
-                    console.log(err);
-
-                    res.status(400).json({
-                        success: false,
-                        message: "video upload failed",
-                    });
+              .upload(fileTempPath, {
+                folder: 'social_media_api/posts/videos',
+                resource_type: 'video',
+                chunk_size: 6000000,
+              })
+              .then(async (result) => {
+                mediaFilesLinks.push({
+                  public_id: result.public_id,
+                  url: result.secure_url,
+                  mediaType: 'video',
                 });
+
+                fs.unlink(fileTempPath, (err) => {
+                  if (err) console.log(err);
+                });
+              })
+              .catch((err) => {
+                fs.unlink(fileTempPath, (fileErr) => {
+                  if (fileErr) console.log(fileErr);
+                });
+
+                console.log(err);
+
+                res.status(400).json({
+                  success: false,
+                  message: 'video upload failed',
+                });
+              });
         } else {
             await cloudinary.v2.uploader
               .upload(fileTempPath, {
-                folder: 'backend/public/assets/posts/images',
+                folder: 'social_media_api/posts/images',
               })
               .then(async (result) => {
                 mediaFilesLinks.push({
