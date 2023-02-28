@@ -9,7 +9,7 @@ const multerStorage = multer.diskStorage({
    }
 });
 
-const whiteListMediaTypes = ['.png', '.jpeg', '.jpg', '.mp4', '.mkv'];
+const whiteListMediaTypes = ['.png', '.jpeg', '.jpg', '.mp4', '.mkv', '.webp'];
 
 const fileFilter = (req, file, cb) => {
   let ext = path.extname(file.originalname).toLowerCase();
@@ -23,6 +23,7 @@ const fileFilter = (req, file, cb) => {
 const multerMiddleware = multer({
   storage: multerStorage,
   fileFilter: fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 }, // limit to 2MB
 });
 
 export default multerMiddleware;
