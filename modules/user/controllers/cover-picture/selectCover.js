@@ -23,11 +23,6 @@ const selectCoverPicture = catchAsyncError(async (req, res, next) => {
         return next(new ErrorHandler(ResponseMessages.USER_NOT_FOUND, 404));
     }
 
-    if (user.cover && user.cover.public_id) {
-        const imageId = user.cover.public_id;
-        await cloudinary.v2.uploader.destroy(imageId);
-    }
-
     user.cover = {
         public_id: public_id,
         url: url,

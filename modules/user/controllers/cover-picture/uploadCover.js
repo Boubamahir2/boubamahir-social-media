@@ -56,13 +56,14 @@ const uploadCover = catchAsyncError(async (req, res, next) => {
         });
       })
       .catch((err) => {
+        console.log(err); // log the error message and stack trace
         fs.unlink(fileTempPath, (fileErr) => {
           if (fileErr) console.log(fileErr);
         });
 
         res.status(400).json({
           success: false,
-          message: "an error occurred in uploading image",
+          message: 'an error occurred in uploading image',
         });
       });
   } else {

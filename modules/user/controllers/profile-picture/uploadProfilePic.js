@@ -22,12 +22,7 @@ const uploadProfilePicture = catchAsyncError(async (req, res, next) => {
     if (!user) {
         return next(new ErrorHandler(ResponseMessages.USER_NOT_FOUND, 404));
     }
-
-    if (user.avatar && user.avatar.public_id) {
-        const imageId = user.avatar.public_id;
-        await cloudinary.v2.uploader.destroy(imageId);
-    }
-
+    
     user.avatar = {
         public_id: public_id,
         url: url,

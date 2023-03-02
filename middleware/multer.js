@@ -23,7 +23,7 @@ const fileFilter = (req, file, cb) => {
 const multerMiddleware = multer({
   storage: multerStorage,
   fileFilter: fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // limit to 2MB
+  limits: { fileSize: 5 * 1024 * 1024 }, // limit to 5MB
 });
 
 export default multerMiddleware;
