@@ -15,8 +15,8 @@ const uploadAvatar = catchAsyncError(async (req, res, next) => {
 
   const fileSize = avatar.size / 1024;
 
-  if (fileSize > 2048) {
-    return next(new ErrorHandler("image size must be lower than 2mb", 413));
+  if (fileSize > 5120) {
+    return next(new ErrorHandler("image size must be lower than 5mb", 413));
   }
 
   const user = await models.User.findById(req.user._id);
